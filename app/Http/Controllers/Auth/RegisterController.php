@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace Foro\Http\Controllers\Auth;
 
-use App\User;
-use App\Http\Controllers\Controller;
+use Foro\User;
+use Foro\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
