@@ -5,7 +5,7 @@ class ExampleTest extends FeatureTestCase
 {
     function test_basic_examples()
     {
-        $user = factory(\App\User::class)->create([
+        $user = factory(\Foro\User::class)->create([
             'name' => 'Israel Nieto',
             'email' => 'isra@mail.com'
         ]);
