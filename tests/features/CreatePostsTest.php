@@ -20,7 +20,8 @@ class CreatePostsTest extends FeatureTestCase
             'title' => $title,
             'content' => $content,
             'pending' => true,
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'slug' => 'esta-es-una-pregunta'
         ]);
 
         $this->see( $title);
@@ -30,6 +31,18 @@ class CreatePostsTest extends FeatureTestCase
     {
         $this->visit(route('post.create'))
             ->seePageIs(route('login'));
+    }
+
+    function test_create_post_form_validation()
+    {
+        $this->actingAs($this->defaultUser())
+            ->visit(route('post.create'))
+            ->press('Publicar')
+            ->seePageIs(route('post.create'))
+            ->seeErrors([
+                'title' => 'El campo título es obligatorio',
+                'content' => 'El campo contenido es obligatorio',
+            ]);
     }
 
 }
