@@ -3,8 +3,12 @@
 
 class PostModelTest extends FeatureTestCase
 {
-    function testExample()
+    /** @test */
+    function test_a_title_have_a_slug()
     {
-        $this->assertTrue(true);
+        $post =  factory('Foro\Post')->create(['title' => 'Este es un slug']);
+
+        $this->assertEquals('este-es-un-slug', $post->slug);
+
     }
 }
