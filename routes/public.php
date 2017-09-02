@@ -1,16 +1,14 @@
 <?php
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', ['as'=> 'post.index', 'uses' => 'PostController@index']);
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
 
-Route::get('/post/{post}', [
+Route::get('/post/{post}-{slug}', [
     'as'=> 'post.show',
-    'uses'=> 'CreatePostController@show'
+    'uses'=> 'PostController@show'
 ])->where('post','\d+');
 

@@ -22,10 +22,31 @@ class ShowPostTest extends FeatureTestCase
 
         // When
 
-        $this->visit(route('post.show', $post))//post/2324
+        $this->visit($post->url)//post/2324
             ->seeInElement('h1', $post->title)
             ->see($post->content)
             ->see($user->name);
 
     }
+    
+    /** @test */
+    function test_old_urls_are_redirected()
+    {
+        // Having
+        $user =  $this->defaultUser();
+
+        $post = factory(\Foro\Post::class)->create([
+            'title' => 'Old title',
+        ]);
+        $user->posts()->save($post);
+
+        $url = $post->url;
+
+        $post->update(['title'=> "New title"]);
+
+        $this->visit($url)
+            ->seePageIs($post->url);
+    }
+
+
 }
