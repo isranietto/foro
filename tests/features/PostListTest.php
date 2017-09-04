@@ -1,8 +1,5 @@
 <?php
 
-use Illuminate\Foundation\Testing\WithoutMiddleware;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class PostListTest extends FeatureTestCase
 {
@@ -21,8 +18,28 @@ class PostListTest extends FeatureTestCase
     }
 
     /** @test */
-    function test_post_list_paginate()
+    function test_post_list_are_paginated()
     {
-        
+        $first = factory(\Foro\Post::class)->create([
+            'title' => 'First Post',
+            'created_at' => \Carbon\Carbon::now()->subDays(2)
+        ]);
+
+        factory(\Foro\Post::class)->times(15)->create([
+            'created_at' => \Carbon\Carbon::now()->subDays(1)
+        ]);
+
+        $last = factory(\Foro\Post::class)->create([
+            'title' => 'Last Post',
+            'created_at' => \Carbon\Carbon::now()
+        ]);
+
+        $this->visit('/')
+            ->see($last->title)
+            ->dontSee($first->title)
+            ->click('2')
+            ->see($first->title)
+            ->dontSee($last->title);
+
     }
 }

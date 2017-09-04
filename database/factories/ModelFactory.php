@@ -32,3 +32,15 @@ $factory->define(\Foro\Post::class, function (\Faker\Generator $faker){
         }
     ];
 });
+
+$factory->define(\Foro\Comment::class, function (\Faker\Generator $faker){
+    return [
+        'comment' => $faker->paragraph,
+        'post_id' => function () {
+            return factory(\Foro\Post::class)->create()->id;
+        },
+        'user_id' => function () {
+            return factory(\Foro\User::class)->create()->id;
+        }
+    ];
+});
