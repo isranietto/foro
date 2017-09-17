@@ -2,8 +2,8 @@
 
 namespace Foro\Http\Controllers;
 
-use Foro\Comment;
 use Foro\Post;
+use Foro\Comment;
 use Illuminate\Http\Request;
 
 class CommentController extends Controller
@@ -35,6 +35,15 @@ class CommentController extends Controller
     public function update(Request $request, $id)
     {
         //
+    }
+
+    public function accept(Comment $comment)
+    {
+        $this->authorize('accept', $comment);
+
+        $comment->markAsAnswer();
+
+        return redirect($comment->post->url);
     }
 
     /**

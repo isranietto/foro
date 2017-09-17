@@ -26,7 +26,7 @@ $factory->define(\Foro\Post::class, function (\Faker\Generator $faker){
     return [
         'title' => $faker->sentence,
         'content' => $faker->paragraph,
-        'pending' => $faker->boolean(),
+        'pending' => true,
         'user_id' => function () {
             return factory(\Foro\User::class)->create()->id;
         }
