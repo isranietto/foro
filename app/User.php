@@ -34,9 +34,32 @@ class User extends Authenticatable
         return $this->hasMany(Post::class);
     }
 
+    public function subscriptions()
+    {
+        return $this->belongsToMany(Post::class, 'subscriptions');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function createPost(array $data)
+    {
+        $post = new Post($data);
+        $this->posts()->save($post);
+        $this->subscribeTo($post);
+
+        return $post;
+    }
+
+    public function subscribeTo(Post $post)
+    {
+        $this->subscriptions()->attach($post);
+    }
+    public function unSubscribeFrom(Post $post)
+    {
+        $this->subscriptions()->detach($post);
     }
 
     public function comment(Post $post, $comment)
@@ -49,9 +72,13 @@ class User extends Authenticatable
         $this->comments()->save($comment);
     }
 
+    public function isSubscribeTo(Post $post)
+    {
+        // valida si el usuario esta suscrito al post que estamos viendo
+        return $this->subscriptions()->where('post_id', $post->id)->count() > 0;
+    }
     public function owns(Model $model)
     {
         return $this->id === $model->user_id;
     }
-
 }
