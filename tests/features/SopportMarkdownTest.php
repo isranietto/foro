@@ -59,4 +59,18 @@ class SopportMarkdownTest extends FeatureTestCase
         $this->visit($post->url)
             ->dontSee($xssAttack);
     }
+    /** @test **/
+    function test_the_post_comment_support_markdown()
+    {
+        $title = 'Lo puedes encontrar en styde.net';
+        $link = 'styde.net';
+
+        $post  = $this->createPost([
+            'content' => "### $title.\n Todo lo que busques de Laravel lo puedes encontrar en [$link](https://styde.net)"
+        ]);
+        
+        $this->visit($post->url)
+            ->seeInElement('h3', $title)
+            ->seeInElement('a', $link);
+    }
 }
