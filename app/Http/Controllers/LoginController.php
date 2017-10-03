@@ -2,17 +2,22 @@
 
 namespace Foro\Http\Controllers;
 
+
 use Foro\Token;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
-    public function login(Token $token)
+    public function login($token)
     {
-        Auth::login($token->user);
+        $token = Token::findActive($token);
 
-        $token->delete();
+        if ($token == null){
+            alert('Este enlace ya expiró, por favor solicite otro', 'danger');
+            return redirect()->route('token');
+        }
+
+        $token->login();
 
         return redirect('/');
     }

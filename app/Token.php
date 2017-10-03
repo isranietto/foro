@@ -2,7 +2,9 @@
 
 namespace Foro;
 
+use Carbon\Carbon;
 use Foro\Mail\TokenMail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Database\Eloquent\Model;
 
@@ -37,8 +39,28 @@ class Token extends Model
         ]);*/
     }
 
+    public static function findActive($token)
+    {
+        return static::where('token', $token)
+            // comprobamos que no halla pasado 30 minutos
+            ->where('created_at' ,'>=' , Carbon::parse('-30 minutes'))
+            ->first();
+    }
+
     public function sendByEmail()
     {
         Mail::to($this->user)->send(new TokenMail($this));
+    }
+
+    public function login()
+    {
+        Auth::login($this->user);
+
+        $this->delete();
+    }
+
+    public function getUrlAttribute()
+    {
+        return route('login', ['token' => $this->token]);
     }
 }
