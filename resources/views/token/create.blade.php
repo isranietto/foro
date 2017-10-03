@@ -5,26 +5,19 @@
         <div class="row">
             <div class="col-md-8 col-md-offset-2">
                 <div class="panel panel-default">
-                    <div class="panel-heading">Register</div>
+                    <div class="panel-heading">Login</div>
                     <div class="panel-body">
-
-                        <form class="form-horizontal" role="form" method="POST" action="{{ route('register') }}">
+                        <form class="form-horizontal" role="form" method="POST" action="{{ route('token') }}">
                             {{ csrf_field() }}
 
                             {!! Alert::render() !!}
 
                             {!! Field::email('email') !!}
 
-                            {!! Field::text('username') !!}
-
-                            {!! Field::text('first_name') !!}
-
-                            {!! Field::text('last_name') !!}
-
                             <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
+                                <div class="col-md-8 col-md-offset-4">
                                     <button type="submit" class="btn btn-primary">
-                                        Regístrate
+                                        Solicitar token
                                     </button>
                                 </div>
                             </div>

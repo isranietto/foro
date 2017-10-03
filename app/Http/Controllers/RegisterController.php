@@ -24,11 +24,7 @@ class RegisterController extends Controller
 
         Token::generateFor($user)->sendByEmail();
 
-        return redirect(route('register_confirmation'));
-    }
-
-    public function confirmation()
-    {
-        return view('register.confirmation');
+        \alert('Enviamos a tu email un enlace para que inicies sesión');
+        return back();
     }
 }

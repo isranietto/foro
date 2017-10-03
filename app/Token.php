@@ -10,6 +10,11 @@ class Token extends Model
 {
     protected $guarded = [];
 
+    public function getRouteKeyName()
+    {
+        return 'token';// remplasamos el id por
+        // el campo toquen para crear una url
+    }
     public function user()
     {
         return $this->belongsTo(User::class);
