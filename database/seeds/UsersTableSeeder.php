@@ -11,11 +11,8 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        factory(\Foro\User::class)->create([
-            'name' => 'IsraNieto',
-            'email' => 'isra@email.com',
+        factory(\Foro\User::class, 15)->create([
+            'role' => 'user'
         ]);
-        factory(\Foro\User::class, 15)->create();
-
     }
 }
