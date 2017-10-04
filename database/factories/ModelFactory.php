@@ -28,6 +28,9 @@ $factory->define(\Foro\Post::class, function (\Faker\Generator $faker){
         'pending' => true,
         'user_id' => function () {
             return factory(\Foro\User::class)->create()->id;
+        },
+        'category_id' => function () {
+            return factory(\Foro\Category::class)->create()->id;
         }
     ];
 });
@@ -41,5 +44,12 @@ $factory->define(\Foro\Comment::class, function (\Faker\Generator $faker){
         'user_id' => function () {
             return factory(\Foro\User::class)->create()->id;
         }
+    ];
+});
+$factory->define(\Foro\Category::class, function (\Faker\Generator $faker) {
+    $name = $faker->unique()->sentence;
+    return [
+        'name' => $name,
+        'slug' => str_slug($name),
     ];
 });

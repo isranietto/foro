@@ -18,12 +18,15 @@ class CreatePostsTest extends DuskTestCase
     {
         $user = $this->defaultUser();
 
-        $this->browse(function ($browser) use ($user){
+        $category = factory(\Foro\Category::class)->create();
+
+        $this->browse(function ($browser) use ($user, $category){
             // Having
             $browser->loginAs($user)
                 ->visitRoute('post.create')
                 ->type('title',$this->title)
                 ->type('content', $this->content)
+                ->select('category_id', $category->id)
                 ->press('Publicar')
                 // Test a user is redirected to the post s details after creating it.
                 ->assertPathIs('/post/1-esta-es-una-pregunta');
@@ -35,7 +38,8 @@ class CreatePostsTest extends DuskTestCase
             'content' => $this->content,
             'pending' => true,
             'user_id' => $user->id,
-            'slug' => 'esta-es-una-pregunta'
+            'slug' => 'esta-es-una-pregunta',
+            'category_id' => $category->id,
         ]);
 
         $post = Post::first();

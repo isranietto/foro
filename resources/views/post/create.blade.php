@@ -9,6 +9,7 @@
                     <div class="panel-body">
                         {!! Form::open(['route'=> 'post.create', 'method'=>'POST']) !!}
 
+                            {!! Field::select('category_id', $categories) !!}
                             {!! Field::text('title') !!}
 
                             {!! Field::textarea('content') !!}
