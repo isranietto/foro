@@ -18,6 +18,57 @@ class PostListTest extends FeatureTestCase
     }
 
     /** @test */
+    function test_a_user_can_see_posts_posts_filtered_by_category()
+    {
+        $laravel = factory(\Foro\Category::class)->create([
+            'name' => 'Laravel', 'slug' => 'laravel'
+        ]);
+        $vue = factory(\Foro\Category::class)->create([
+            'name' => 'Vue.js', 'slug' => 'vue-js'
+        ]);
+
+        $laravelPost = factory(\Foro\Post::class)->create([
+            'title' => 'Post de Laravel',
+            'category_id' => $laravel->id
+        ]);
+        $vuePost = factory(\Foro\Post::class)->create([
+            'title' => 'Post de Vue.js',
+            'category_id' => $vue->id
+        ]);
+
+        $this->visit('/')
+            ->see($laravelPost->title)
+            ->see($vuePost->title)
+            ->within('.categories', function () {
+                $this->click('Laravel');
+            })
+            ->seeInElement('h1', 'Post de Laravel')
+            ->see($laravelPost->title)
+            ->dontSee($vuePost->title);
+    }
+
+    /** @test */
+    function test_a_user_can_see_posts_posts_filtered_by_status()
+    {
+        $pendingPost = factory(\Foro\Post::class)->create([
+            'title' => 'Post de Laravel pendiente',
+            'pending' => true
+        ]);
+        $completePost = factory(\Foro\Post::class)->create([
+            'title' => 'Post de Vue.js completo',
+            'pending' => false
+        ]);
+
+        $this->visitRoute('post.pending')
+            ->see($pendingPost->title)
+            ->dontSee($completePost->title);
+
+        $this->visitRoute('post.completed')
+            ->see($completePost->title)
+            ->dontSee($pendingPost->title);
+    }
+
+    /** @test */
     function test_post_list_are_paginated()
     {
         $first = factory(\Foro\Post::class)->create([

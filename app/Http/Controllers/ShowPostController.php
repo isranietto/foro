@@ -5,16 +5,8 @@ namespace Foro\Http\Controllers;
 use Foro\Post;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
+class ShowPostController extends Controller
 {
-
-    public function index()
-    {
-        $posts = Post::orderBy('created_at', 'DESC')->paginate();
-
-        return view('post.index', compact('posts'));
-    }
-
     /**
      * @param Post $post
      * @param $slug
@@ -29,6 +21,4 @@ class PostController extends Controller
         }
         return view('post.show',compact('post'));
     }
-
-
 }

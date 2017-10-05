@@ -1,13 +1,23 @@
 <?php
 
 
-Route::get('/', ['as'=> 'post.index', 'uses' => 'PostController@index']);
-
-
 Route::get('/home', 'HomeController@index');
 
 Route::get('/post/{post}-{slug}', [
     'as'=> 'post.show',
-    'uses'=> 'PostController@show'
+    'uses'=> 'ShowPostController@show'
 ])->where('post','\d+');
 
+Route::get('posts-pendientes/{category?}', [
+    'uses' => 'ListPostController',
+    'as' => 'post.pending'
+]);
+Route::get('posts-completados/{category?}', [
+    'uses' => 'ListPostController',
+    'as' => 'post.completed'
+]);
+
+Route::get('{category?}', [
+    'as'=> 'post.index',
+    'uses' => 'ListPostController'
+]);

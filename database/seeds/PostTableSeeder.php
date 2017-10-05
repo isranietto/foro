@@ -19,7 +19,8 @@ class PostTableSeeder extends Seeder
         for ($i = 0; $i < 250; ++$i) {
             factory(\Foro\Post::class)->create([
                 'user_id' => $users->random()->id,
-                'category_id' => $categories->random()->id
+                'category_id' => $categories->random()->id,
+                'created_at' => \Carbon\Carbon::now()->subHour(rand(0 ,720))
             ]);
         }
     }

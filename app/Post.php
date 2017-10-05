@@ -50,4 +50,27 @@ class Post extends Model
     {
         return route('post.show', [$this->id, $this->slug]);
     }
+
+    public function scopeCategory($query, Category $category)
+    {
+        if ($category->exists) {
+            return $query->where('category_id', $category->id);
+        }
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('pending', true);
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('pending', false);
+    }
+
+    public function scopeMyOrderBy($query, $orderColumn, $orderDirection)
+    {
+        $query->getQuery()->orders = [];
+        return $query->orderBy($orderColumn, $orderDirection);
+    }
 }
