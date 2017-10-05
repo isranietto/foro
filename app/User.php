@@ -55,6 +55,11 @@ class User extends Authenticatable
         return $post;
     }
 
+    public function isSubscribedTo(Post $post)
+    {
+        return $this->subscriptions()->where('post_id', $post->id)->count() > 0;
+    }
+
     public function subscribeTo(Post $post)
     {
         $this->subscriptions()->attach($post);

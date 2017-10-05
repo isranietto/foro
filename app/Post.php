@@ -2,6 +2,7 @@
 
 namespace Foro;
 
+use GrahamCampbell\Markdown\Facades\Markdown;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -38,14 +39,6 @@ class Post extends Model
         return $this->comments()->orderBy('created_at' , 'DESC');
     }
 
-    public function setTitleAttribute($value)
-    {
-        if ($value) {
-            $this->attributes['title'] = $value;
-            $this->attributes['slug'] = Str::slug($value);
-        }
-    }
-
     public function getUrlAttribute()
     {
         return route('post.show', [$this->id, $this->slug]);
@@ -72,5 +65,18 @@ class Post extends Model
     {
         $query->getQuery()->orders = [];
         return $query->orderBy($orderColumn, $orderDirection);
+    }
+
+    public function setTitleAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['title'] = $value;
+            $this->attributes['slug'] = Str::slug($value);
+        }
+    }
+
+    public function getSafeHtmlContentAttribute()
+    {
+        return Markdown::convertToHtml(e($this->content));
     }
 }

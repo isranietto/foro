@@ -1,43 +1,72 @@
-@extends('layouts.app')
+@extends('layouts/app')
 
 @section('content')
-    <h1>{{ $post->title }}</h1>
-    {!! Markdown::convertToHtml(e($post->content)) !!}
-    <p>{{ $post->user->name }}</p>
+    <div class="row">
+        <div class="col-md-10">
+            <h1>{{ $post->title }}</h1>
+        </div>
+    </div>
 
-    @if (auth()->check())
-        @if(! auth()->user()->isSubscribeTo($post) )
-            {!! Form::open([ 'route' => ['post.subscribe', $post ], 'method' => 'POST']) !!}
-                <button class="btn btn-default">Suscribirse al post</button>
-            {!! Form::close() !!}
-        @else
-            {!! Form::open([ 'route' => ['post.unsubscribe', $post ], 'method' => 'DELETE']) !!}
-                <button class="btn btn-default">Desuscribirse del post</button>
-            {!! Form::close() !!}
-        @endif
-    @endif
+    <div class="row">
+        <div class="col-md-8">
+            <p>
+                Publicado por <a href="#">{{ $post->user->name }}</a>
+                {{ $post->created_at->diffForHumans() }}
+                en <a href="{{ $post->category->url }}">{{ $post->category->name }}</a>.
+                @if ($post->pending)
+                    <span class="label label-warning">Pendiente</span>
+                @else
+                    <span class="label label-success">Completado</span>
+                @endif
+            </p>
 
-    <h4>Comentarios</h4>
+            {!! $post->safe_html_content !!}
 
-    {!! Form::open(['route'=> ['comments.store', $post], 'method' => 'POST']) !!}
-
-        {!! Field::textarea('comment') !!}
-
-        <button type="submit">
-            Publicar Comentario
-        </button>
-
-    {!! Form::close() !!}
-
-    @foreach($post->latestComments as $comment)
-        <article class="{{ $comment->answer? 'answer' : '' }}">
-            {!! Markdown::convertToHtml(e($comment->comment)) !!}
-
-            @if( \Gate::allows('accept', $comment) && !$comment->answer )
-                {!! Form::open(['route'=>['comments.accept', $comment ], 'method'=> 'POST']) !!}
-                <button type="submit">Aceptar Respuesta</button>
-                {!! Form::close() !!}
+            @if (auth()->check())
+                @if (!auth()->user()->isSubscribedTo($post))
+                    {!! Form::open(['route' => ['post.subscribe', $post], 'method' => 'POST']) !!}
+                    <button type="submit">Suscribirse al post</button>
+                    {!! Form::close() !!}
+                @else
+                    {!! Form::open(['route' => ['post.unsubscribe', $post], 'method' => 'DELETE']) !!}
+                    <button type="submit">Desuscribirse del post</button>
+                    {!! Form::close() !!}
+                @endif
             @endif
-        </article>
-    @endforeach
+
+            <hr>
+
+            <h4>Comentarios</h4>
+
+            {{-- todo: Paginate comments! --}}
+
+            @foreach($post->latestComments as $comment)
+                <article class="{{ $comment->answer ? 'answer' : '' }}">
+                    {{-- todo: support markdown in the comments as well! --}}
+
+                    {!! Markdown::convertToHtml(e($comment->comment)) !!}
+
+                    @if( \Gate::allows('accept', $comment) && !$comment->answer )
+                        {!! Form::open(['route' => ['comments.accept', $comment], 'method' => 'POST']) !!}
+                        <button type="submit" class="btn btn-default">Aceptar Respuesta</button>
+                        {!! Form::close() !!}
+                    @endif
+                </article>
+
+                <hr>
+            @endforeach
+
+            {!! Form::open(['route' => ['comments.store', $post], 'method' => 'POST', 'class' => 'form']) !!}
+
+            {!! Field::textarea('comment', ['class' => 'form-control', 'rows' => 6, 'label' => 'Escribe un comentario']) !!}
+
+            <button type="submit" class="btn btn-primary">
+                Publicar Comentario
+            </button>
+
+            {!! Form::close() !!}
+        </div>
+
+        @include('post.sidebar')
+    </div>
 @endsection

@@ -19,20 +19,7 @@ class ListPostController extends Controller
             ->myorderby($orderColumn, $orderDirection)
             ->paginate();
 
-        $categoryItems = $this->getCategoryItems();
-
         return view('post.index', compact('posts','category' ,'categoryItems'));
-    }
-
-    protected function getCategoryItems()
-    {
-        return  Category::orderBy('name')->get()->map(function ($category) {
-            return [
-                'title' => $category->name,
-                'full_url' => route('post.index', $category)
-
-            ];
-        })->toArray();
     }
 
     protected function getListScopes(Category $category, Request $request)
