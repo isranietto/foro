@@ -61,6 +61,10 @@ class Post extends Model
         return $query->where('pending', false);
     }
 
+    public function scopeByUser($query, User $user)
+    {
+        return $query->where('user_id', $user->id);
+    }
     public function scopeMyOrderBy($query, $orderColumn, $orderDirection)
     {
         $query->getQuery()->orders = [];

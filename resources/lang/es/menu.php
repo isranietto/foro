@@ -26,6 +26,11 @@ return [
             'title' => 'Posts completados',
             'route' => 'post.completed',
         ],
+        'mine' => [
+            'title' => 'Mis posts',
+            'route' => 'post.mine',
+            'logged' => true
+         ],
     ],
 
 ];

@@ -9,3 +9,5 @@ Route::post('/post/{post}/comment', [ 'as'=> 'comments.store', 'uses'=> 'Comment
 Route::post('comments/{comment}/accept',['as'=> 'comments.accept', 'uses' => 'CommentController@accept']);
 Route::post('post/{post}/subscribe',['as'=> 'post.subscribe', 'uses'=> 'SubscriptionController@subscribe']);
 Route::delete('post/{post}/subscribe',['as'=> 'post.unsubscribe', 'uses'=> 'SubscriptionController@unsubscribe']);
+
+Route::get('mis-post/{category?}', ['as' => 'post.mine', 'uses' => 'ListPostController']);

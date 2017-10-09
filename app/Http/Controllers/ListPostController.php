@@ -14,42 +14,42 @@ class ListPostController extends Controller
 
         list($orderColumn, $orderDirection) = $this->getLIstOrder($request->get('orden'));
 
-        $posts = Post::orderBy('created_at', 'DESC')
-            ->scopes($this->getListScopes($category ,$request))
+        $posts = Post::query()
+            ->with(['user', 'category'])
+            ->category($category)
+            ->orderBy('created_at', 'DESC')
+            ->scopes($this->getRouteScope($request))
             ->myorderby($orderColumn, $orderDirection)
             ->paginate();
 
-        return view('post.index', compact('posts','category' ,'categoryItems'));
+        return view('post.index', compact('posts','category'));
     }
 
-    protected function getListScopes(Category $category, Request $request)
+    public function getRouteScope(Request $request)
     {
-        $scopes = [];
+        $scopes = [
+            'post.mine' => ['byUser' => [$request->user()]] ,
+            'post.pending' => ['pending'],
+            'post.completed' => ['completed'],
+        ];
 
-        if ($category->exists) {
-            $scopes['category'] = [$category];
-        }
-        $routeName = $request->route()->getName();
+        $name = $request->route()->getName();
 
-        if ($routeName == 'post.pending') {
-            $scopes[] = 'pending';
-        }
-
-        if ($routeName == 'post.completed') {
-            $scopes[] = 'completed';
-        }
-
-        return $scopes;
+        return isset ($scopes[$name]) ? $scopes[$name]: [];
     }
 
     protected function getLIstOrder($order)
     {
-        if ($order == 'recientes') {
-            return ['created_at', 'desc'];
+        $orders = [
+            'recientes' => ['created_at', 'desc'],
+            'antiguos' => ['created_at', 'asc']
+        ];
+
+        return $orders[$order] ?? ['created_at', 'desc'];
+
+        /*if (isset($orders[$order])) {
+            return $orders[$order];
         }
-        if ($order == 'antiguos') {
-            return ['created_at', 'asc'];
-        }
-        return ['created_at', 'desc'];
+        return ['created_at', 'desc'];*/
     }
 }

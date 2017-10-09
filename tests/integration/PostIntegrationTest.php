@@ -30,4 +30,16 @@ class PostIntegrationTest extends FeatureTestCase
                 ->assertResponseOk()
                 ->assertResponseStatus(200);
     }
+    /** @test */
+    function test_a_post_url_is_generate()
+    {
+        //actividad lección 14
+        $user = factory(\Foro\User::class)->create();
+        $post = factory(\Foro\Post::class)->create([
+            'title' => 'Este es un post',
+            'user_id' => $user->id
+        ]);
+
+        $this->assertSame($post->url, route('post.show', [$post->id, $post->slug]));
+    }
 }
