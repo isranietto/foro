@@ -10,4 +10,16 @@ Route::post('comments/{comment}/accept',['as'=> 'comments.accept', 'uses' => 'Co
 Route::post('post/{post}/subscribe',['as'=> 'post.subscribe', 'uses'=> 'SubscriptionController@subscribe']);
 Route::delete('post/{post}/subscribe',['as'=> 'post.unsubscribe', 'uses'=> 'SubscriptionController@unsubscribe']);
 
+Route::post('/post/{post}-{slug}/upvote', [
+    'uses'=> 'VotePostController@upvote'
+])->where('post','\d+');
+
+Route::post('/post/{post}-{slug}/downvote', [
+    'uses'=> 'VotePostController@downvote'
+])->where('post','\d+');
+
+Route::delete('/post/{post}-{slug}/vote', [
+    'uses'=> 'VotePostController@undoVote'
+])->where('post','\d+');
+
 Route::get('mis-post/{category?}', ['as' => 'post.mine', 'uses' => 'ListPostController']);
