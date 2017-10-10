@@ -125,4 +125,38 @@ class APostCanBeVotedTest extends TestCase
         $this->assertSame(0 , $this->post->score);
     }
 
+    /** @test */
+    function test_get_vote_from_user()
+    {
+        $this->assertNull($this->post->getVoteFrom($this->user));
+
+        $this->actingAs($this->user);
+
+        Vote::upvote($this->post);
+
+        $this->assertSame(1 , $this->post->getVoteFrom($this->user));
+
+        Vote::downvote($this->post);
+
+        $this->assertSame(-1 ,$this->post->getVoteFrom($this->user) );
+
+        $anotherPost = $this->createPost();
+
+        $this->assertNull($anotherPost->getVoteFrom($this->user));
+
+
+    }// ó
+
+    /** @test */
+    function test_get_vote_from_user_returns_the_vote_from_the_right_post()
+    {
+        Vote::upvote($this->post);
+
+        $anotherPost = $this->createPost();
+
+        $this->assertSame(1, $this->post->current_vote);
+
+        $this->assertNull($anotherPost->current_vote);
+    }
+
 }

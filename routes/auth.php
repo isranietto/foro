@@ -10,15 +10,15 @@ Route::post('comments/{comment}/accept',['as'=> 'comments.accept', 'uses' => 'Co
 Route::post('post/{post}/subscribe',['as'=> 'post.subscribe', 'uses'=> 'SubscriptionController@subscribe']);
 Route::delete('post/{post}/subscribe',['as'=> 'post.unsubscribe', 'uses'=> 'SubscriptionController@unsubscribe']);
 
-Route::post('/post/{post}-{slug}/upvote', [
+Route::post('/post/{post}/upvote', [
     'uses'=> 'VotePostController@upvote'
 ])->where('post','\d+');
 
-Route::post('/post/{post}-{slug}/downvote', [
+Route::post('/post/{post}/downvote', [
     'uses'=> 'VotePostController@downvote'
 ])->where('post','\d+');
 
-Route::delete('/post/{post}-{slug}/vote', [
+Route::delete('/post/{post}/vote', [
     'uses'=> 'VotePostController@undoVote'
 ])->where('post','\d+');
 
