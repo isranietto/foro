@@ -10,16 +10,30 @@ Route::post('comments/{comment}/accept',['as'=> 'comments.accept', 'uses' => 'Co
 Route::post('post/{post}/subscribe',['as'=> 'post.subscribe', 'uses'=> 'SubscriptionController@subscribe']);
 Route::delete('post/{post}/subscribe',['as'=> 'post.unsubscribe', 'uses'=> 'SubscriptionController@unsubscribe']);
 
-Route::post('/post/{post}/upvote', [
+//Vote
+Route::post('/posts/{post}/upvote', [
     'uses'=> 'VotePostController@upvote'
-])->where('post','\d+');
+]);
 
-Route::post('/post/{post}/downvote', [
+Route::post('/posts/{post}/downvote', [
     'uses'=> 'VotePostController@downvote'
-])->where('post','\d+');
+]);
 
-Route::delete('/post/{post}/vote', [
+Route::delete('/posts/{post}/vote', [
     'uses'=> 'VotePostController@undoVote'
-])->where('post','\d+');
+]);
+
+// Comment
+Route::post('/comments/{comment}/upvote', [
+    'uses'=> 'VoteCommentController@upvote'
+]);
+
+Route::post('/comments/{comment}/downvote', [
+    'uses'=> 'VoteCommentController@downvote'
+]);
+
+Route::delete('/comments/{comment}/vote', [
+    'uses'=> 'VoteCommentController@undoVote'
+]);
 
 Route::get('mis-post/{category?}', ['as' => 'post.mine', 'uses' => 'ListPostController']);

@@ -20,9 +20,10 @@
                 @endif
             </p>
 
-            <app-vote post_id="{{ $post->id }}"
-                    score="{{ $post->score }}"
-                    vote="{{ $post->current_vote }}"></app-vote>
+            <app-vote   id="{{ $post->id }}"
+                        score="{{ $post->score }}"
+                        vote="{{ $post->current_vote }}"
+                        module="{{ $post->getTable() }}"></app-vote>
 
             {!! $post->safe_html_content !!}
 
@@ -45,10 +46,17 @@
             {{-- todo: Paginate comments! --}}
 
             @foreach($post->latestComments as $comment)
-                <article class="{{ $comment->answer ? 'answer' : '' }}">
+                <article class="comment {{ $comment->answer ? 'answer' : '' }}">
                     {{-- todo: support markdown in the comments as well! --}}
 
                     {!! Markdown::convertToHtml(e($comment->comment)) !!}
+
+                    @if(auth()->check())
+                        <app-vote   id="{{ $comment->id }}"
+                                    score="{{ $comment->score }}"
+                                    vote="{{ $comment->current_vote }}"
+                                    module="{{ $comment->getTable() }}"></app-vote>
+                    @endif
 
                     @if( \Gate::allows('accept', $comment) && !$comment->answer )
                         {!! Form::open(['route' => ['comments.accept', $comment], 'method' => 'POST']) !!}

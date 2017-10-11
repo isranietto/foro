@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 
 class Post extends Model
 {
+    use CanBeVoted;
+
     protected $fillable = ['title', 'content','category_id'];
 
     protected $casts = [
@@ -33,11 +35,6 @@ class Post extends Model
     public function subscribers()
     {
         return $this->belongsToMany(User::class, 'subscriptions');
-    }
-
-    public function votes()
-    {
-        return $this->hasMany(Vote::class);
     }
 
     public function latestComments()
@@ -90,17 +87,5 @@ class Post extends Model
         return Markdown::convertToHtml(e($this->content));
     }
 
-    public function getCurrentVoteAttribute()
-    {
-        if (auth()->check()){
-            return $this->getVoteFrom( auth()->user() );
-        }
-    }
 
-    public function getVoteFrom(User $user)
-    {
-        return $this->votes()
-                ->where( 'user_id', $user->id )
-                ->value('vote');
-    }
 }
