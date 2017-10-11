@@ -1,6 +1,7 @@
 <?php
 
 //
+Route::post('logout', 'Auth\LoginController@logout');
 
 Route::get('/post/create', [ 'as'=> 'post.create', 'uses'=> 'CreatePostController@create' ]);
 Route::post('/post/create', [ 'as'=> 'post.store', 'uses'=> 'CreatePostController@store' ]);
@@ -11,29 +12,29 @@ Route::post('post/{post}/subscribe',['as'=> 'post.subscribe', 'uses'=> 'Subscrip
 Route::delete('post/{post}/subscribe',['as'=> 'post.unsubscribe', 'uses'=> 'SubscriptionController@unsubscribe']);
 
 //Vote
-Route::post('/posts/{post}/upvote', [
-    'uses'=> 'VotePostController@upvote'
+Route::pattern('module','[a-z]+');
+
+Route::bind('votable', function ($votableId, $route) {
+    $modules =[
+        'posts' => \Foro\Post::class,
+        'comments' => \Foro\Comment::class,
+    ];
+
+    abort_unless($model = $modules[$route->parameter('module')] ?? null, 404);
+
+    return $model::findOrFail($votableId);
+});
+
+Route::post('{module}/{votable}/upvote', [
+    'uses'=> 'VoteController@upvote'
 ]);
 
-Route::post('/posts/{post}/downvote', [
-    'uses'=> 'VotePostController@downvote'
+Route::post('{module}/{votable}/downvote', [
+    'uses'=> 'VoteController@downvote'
 ]);
 
-Route::delete('/posts/{post}/vote', [
-    'uses'=> 'VotePostController@undoVote'
-]);
-
-// Comment
-Route::post('/comments/{comment}/upvote', [
-    'uses'=> 'VoteCommentController@upvote'
-]);
-
-Route::post('/comments/{comment}/downvote', [
-    'uses'=> 'VoteCommentController@downvote'
-]);
-
-Route::delete('/comments/{comment}/vote', [
-    'uses'=> 'VoteCommentController@undoVote'
+Route::delete('{module}/{votable}/vote', [
+    'uses'=> 'VoteController@undoVote'
 ]);
 
 Route::get('mis-post/{category?}', ['as' => 'post.mine', 'uses' => 'ListPostController']);
