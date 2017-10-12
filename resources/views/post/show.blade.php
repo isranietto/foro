@@ -20,11 +20,12 @@
                 @endif
             </p>
 
+            @if(auth()->check())
             <app-vote   id="{{ $post->id }}"
                         score="{{ $post->score }}"
                         vote="{{ $post->current_vote }}"
                         module="{{ $post->getTable() }}"></app-vote>
-
+            @endif  
             {!! $post->safe_html_content !!}
 
             @if (auth()->check())
