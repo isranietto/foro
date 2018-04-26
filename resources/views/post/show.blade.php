@@ -25,7 +25,7 @@
                         score="{{ $post->score }}"
                         vote="{{ $post->current_vote }}"
                         module="{{ $post->getTable() }}"></app-vote>
-            @endif  
+            @endif
             {!! $post->safe_html_content !!}
 
             @if (auth()->check())

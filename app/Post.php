@@ -47,9 +47,9 @@ class Post extends Model
         return route('post.show', [$this->id, $this->slug]);
     }
 
-    public function scopeCategory($query, Category $category)
+    public function scopeCategory($query, Category $category = null)
     {
-        if ($category->exists) {
+        if (optional($category)->exists) {
             return $query->where('category_id', $category->id);
         }
     }

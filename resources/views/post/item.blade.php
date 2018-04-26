@@ -11,9 +11,10 @@
         @endif
     </p>
     @if(auth()->check())
-        <app-vote   post_id="{{ $post->id }}"
+        <app-vote   id="{{ $post->id }}"
                     score="{{ $post->score }}"
-                    vote="{{ $post->current_vote }}"></app-vote>
+                    vote="{{ $post->current_vote }}"
+                    module="{{ $post->getTable() }}"></app-vote>
     @endif
     <hr>
 

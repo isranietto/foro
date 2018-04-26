@@ -4,7 +4,7 @@
     <div class="row">
         <div class="col-md-12">
             <h1>
-                {{ $category->exists ? 'Post de '.$category->name : 'Post' }}
+                {{ (optional($category)->exists )? 'Post de '.$category->name : 'Post' }}
             </h1>
         </div>
     </div>
@@ -21,7 +21,7 @@
 
             @each('post.item', $posts, 'post')
 
-            {{ $posts->appends(request()->intersect(['orden']))->render() }}
+            {{ $posts->appends(array_filter(request()->only(['orden'])))->render() }}
         </div>
     </div>
 @endsection
